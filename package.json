@@ -4,8 +4,9 @@
   "main": "backend/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/server.js",
-    "start": "node backend/server.js"
+    "start": "cross-env NODE_ENV=production node backend/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
+    "build": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,7 @@
     "@supabase/supabase-js": "^2.48.1",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.5.1",
+    "cloudinary": "^1.21.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -32,6 +33,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9"
   }
 }

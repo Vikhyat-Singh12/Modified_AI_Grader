@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Vikhyat from "../assets/pic/Vikhyat.jpg";
 import Prakash from "../assets/pic/Prakash.jpg";
 import Riya from "../assets/pic/Riya.jpg";
+import Ananya from "../assets/pic/Ananya.jpg";
 
 function AboutUs() {
   const teamMembers = [
@@ -22,10 +23,9 @@ function AboutUs() {
       image: Riya,
     },
     {
-      name: "Olivia Wilson",
-      role: "CONTENT CREATOR",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+      name: "Ananya Gupta",
+      role: "Information Technology",
+      image: Ananya,
     },
   ];
 
