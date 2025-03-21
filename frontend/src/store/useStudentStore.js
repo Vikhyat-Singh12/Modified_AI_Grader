@@ -6,16 +6,19 @@ import toast from 'react-hot-toast';
 export const useStudentStore = create((set, get) => ({
     assignments: [],
     submittedAssignments:[],
+    isSubmitting: false,
     assignedTeacher:[],
 
     submitAssignment: async (data) => {
        try {
+         set({ isSubmitting: true });
          await axios.post("/student-dashboard/submit-assignment", data, {
            headers: {
              "Content-Type": "multipart/form-data",
            },
          });
          toast.success("Assignment submitted successfully and AI Graded Successfully");
+         set({ isSubmitting: false });
        } catch (error) {
          toast.error(error.response?.data?.message || "An error in submitting Answer");
          console.log("Error in submitAssignment", error);

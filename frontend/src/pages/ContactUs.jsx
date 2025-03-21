@@ -36,9 +36,9 @@ function ContactUs() {
       {/* contact  */}
       <div className="container mx-auto px-6 py-4">
         <div className="space-x-10 flex items-center justify-center mb-6 ">
-          <h1 className="text-7xl font-bold text-blue-600">Contact Us</h1>
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-blue-600">Contact Us</h1>
 
-          <div className=" w-72 h-72 ">
+          <div className=" min-w-44 min-h-44 ">
             <lottie-player
               id="firstLottie"
               autoplay

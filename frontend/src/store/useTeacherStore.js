@@ -6,17 +6,21 @@ import toast from "react-hot-toast";
 export const useTeacherStore = create((set, get) => ({
     students: [],
     assignments: [],
+    isCreattingAssignment: false,
     submissionOfPartocularAssignment: {},
     particularStudentSubmission: {},
     particularStudent: {},
 
     createAssignment: async (data) => {
         try {
-        await axios.post("/teacher-dashboard/create-assignment", data, {
+            set({ isCreattingAssignment: true });
+            await axios.post("/teacher-dashboard/create-assignment", data, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
             });           
+            // toast.success("Assignment created successfully");
+            set({ isCreattingAssignment: false });
         } catch (error) {
             toast.error(error.response?.data?.message || "An error occurred");
             console.log("Error in createAssignment", error);

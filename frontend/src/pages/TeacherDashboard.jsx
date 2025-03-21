@@ -127,7 +127,7 @@ function TeacherDashboard() {
           <br />
           <button
             onClick={() => navigate("/teacher-dashboard/create-assignment")}
-            className="flex items-center gap-2 bg-purple-600 text-white px-5 py-0 rounded-lg text-lg font-semibold hover:bg-purple-700 transition duration-300"
+            className="flex items-center gap-2 bg-yellow-400 text-white px-5 py-1 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition duration-300"
           >
             <Plus /> <span>Create New Assignment</span>
           </button>

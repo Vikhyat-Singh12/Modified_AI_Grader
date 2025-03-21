@@ -171,7 +171,7 @@ function AdminPanel() {
             background="transparent"
           ></lottie-player>
 
-          <span className=" inline-block bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 hover:from-indigo-300  hover:via-purple-300 hover:to-pink-300 transition-all duration-500 text-5xl">
+          <span className=" inline-block bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 hover:from-indigo-300  hover:via-purple-300 hover:to-pink-300 transition-all duration-500 text-3xl sm:text-4xl md:text-5xl">
             Admin Panel
           </span>
         </h2>
@@ -282,7 +282,7 @@ function AdminPanel() {
             <tbody>
               {filteredPendingUsers.length > 0 ? (
                 filteredPendingUsers.map((user) => (
-                  <tr key={user.id} className=" ">
+                  <tr key={user._id} className=" ">
                     <td>
                       <img
                         src={user.profilePicture || download}

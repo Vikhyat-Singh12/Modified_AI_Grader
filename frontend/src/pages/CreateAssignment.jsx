@@ -6,7 +6,7 @@ import CreateAssignmentImg from "../assets/bg/createassignment.svg";
 
 function CreateAssignment() {
   const { user } = useAuthStore();
-  const { createAssignment } = useTeacherStore();
+  const { createAssignment, isCreattingAssignment } = useTeacherStore();
   const classes = user.assignedClasses.sort((a, b) => a - b);
 
   const [title, setTitle] = useState("");
@@ -74,14 +74,14 @@ function CreateAssignment() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-6xl flex">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-6xl flex ">
         {/* Left Image Section */}
-        <div className="w-1/3 flex flex-col items-center justify-center bg-yellow-300 p-6 rounded-l-lg ">
+        <div className="md:w-1/3 hidden md:flex flex-col items-center justify-center bg-yellow-300 p-6 rounded-l-lg ">
           <img
             src={CreateAssignmentImg}
             alt="Create Assignment"
             className="w-3/4 mb-4"
-            style={{width:"fit-content"}}
+            style={{ width: "fit-content" }}
           />
           <p className="text-lg text-gray-700 font-semibold text-center">
             Simplify your workload by creating assignments effortlessly!
@@ -89,7 +89,7 @@ function CreateAssignment() {
         </div>
 
         {/* Right Form Section */}
-        <div className="w-2/3 p-8">
+        <div className="w-full md:w-2/3 p-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">
             Create Assignment
           </h2>
@@ -239,8 +239,21 @@ function CreateAssignment() {
 
             {/* Submit Button */}
             <div className="col-span-2">
-              <button className="w-full bg-yellow-400 text-gray-800 px-4 py-2 rounded-md hover:bg-yellow-600 transition">
-                Assign to Class {selectedClass}
+              <button
+                className="w-full bg-yellow-400 text-gray-800 px-4 py-2 rounded-md hover:bg-yellow-600 transition flex items-center justify-center"
+                disabled={isCreattingAssignment} // Disable button when creating assignment
+              >
+                {isCreattingAssignment ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 border-2 border-gray-800 border-t-transparent rounded-full"
+                      viewBox="0 0 24 24"
+                    ></svg>
+                    Assigning...
+                  </>
+                ) : (
+                  `Assign to Class ${selectedClass}`
+                )}
               </button>
             </div>
           </form>

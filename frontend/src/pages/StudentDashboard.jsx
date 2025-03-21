@@ -15,12 +15,14 @@ function StudentDashboard() {
     submitAssignment,
     assignedTeacher,
     getAssignedTeacher,
+    isSubmitting,
   } = useStudentStore();
 
   const subjects = user.subjects;
 
   const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
   const [selectedFiles, setSelectedFiles] = useState({});
+  const [submittingAssignment, setSubmittingAssignment] = useState(null);
 
   useEffect(() => {
     getAllAssgnmentAndSubmittedAssignment({ subject: selectedSubject });
@@ -45,13 +47,17 @@ function StudentDashboard() {
     if (!selectedFiles[assignmentId])
       return toast.error("Please select a file");
 
+    setSubmittingAssignment(assignmentId); // Start loading for this assignment
+
     const formData = new FormData();
-    formData.append("fileUrl", selectedFiles[assignmentId]); // Get the correct file
+    formData.append("fileUrl", selectedFiles[assignmentId]);
     formData.append("assignmentId", assignmentId);
     formData.append("subject", selectedSubject);
 
     await submitAssignment(formData);
     await getAllAssgnmentAndSubmittedAssignment({ subject: selectedSubject });
+
+    setSubmittingAssignment(null); // Stop loading after submission
 
     // Clear the file after submission
     setSelectedFiles((prev) => ({
@@ -59,6 +65,7 @@ function StudentDashboard() {
       [assignmentId]: null,
     }));
   };
+
 
   return (
     <div className="w-full min-h-screen relative px-4 py-6">
@@ -85,7 +92,6 @@ function StudentDashboard() {
 
         {/* Student Profile & Subject Selector */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-10">
-
           <div className="flex flex-col sm:flex-row items-center w-full ">
             {/* Student Profile */}
             <div className="flex flex-col items-center">
@@ -180,77 +186,115 @@ function StudentDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {pendingAssignments?.map((assignment, index) => (
-                  <tr
-                    key={assignment._id}
-                    className={`text-center text-xs md:text-sm ${
-                      index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    } hover:bg-gray-200 transition-all`}
-                  >
-                    <td className="p-3">{assignment.title}</td>
-                    <td className="p-3">
-                      {new Date(assignment.deadline).toLocaleDateString(
-                        "en-GB",
-                        {
+                {pendingAssignments?.map((assignment, index) => {
+                  const dueDate = new Date(assignment.deadline);
+                  const currentDate = new Date();
+                  const isDeadlinePassed = currentDate > dueDate; // Check if the deadline has passed
+
+                  return (
+                    <tr
+                      key={assignment._id}
+                      className={`text-center text-xs md:text-sm ${
+                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                      } hover:bg-gray-200 transition-all`}
+                    >
+                      <td className="p-3">{assignment.title}</td>
+                      <td className="p-3">
+                        {dueDate.toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "long",
                           year: "2-digit",
-                        }
-                      )}
-                    </td>
-                    <td className="p-3">{assignment.totalMarks}</td>
-                    <td className="p-3">Pending</td>
-                    <td className="p-3">
-                      <a
-                        href={assignment.assignmentFile}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 md:px-4 md:py-1 rounded-md shadow-md transition-all text-xs md:text-sm"
-                      >
-                        View
-                      </a>
-                    </td>
-                    <td className="p-3">
-                      <div className="flex flex-col items-center justify-center">
-                        {/* File Input (Click Icon to Upload) */}
-                        <label className="cursor-pointer text-blue-600 hover:text-blue-800 text-xl flex items-center">
-                          📂
-                          <input
-                            type="file"
-                            accept=".pdf"
-                            className="hidden"
-                            onChange={(e) =>
-                              handleFileChange(e, assignment._id)
-                            } // Pass assignment ID
-                          />
-                        </label>
+                        })}
+                      </td>
+                      <td className="p-3">{assignment.totalMarks}</td>
 
-                        {/* Display Selected File Name Inline with Truncation */}
-                        {selectedFiles[assignment._id] && (
-                          <p
-                            className="text-xs text-gray-600 truncate max-w-[120px] mt-1 text-center"
-                            title={selectedFiles[assignment._id].name}
-                          >
-                            {selectedFiles[assignment._id].name.length > 15
-                              ? selectedFiles[assignment._id].name.substring(
-                                  0,
-                                  12
-                                ) + "..."
-                              : selectedFiles[assignment._id].name}
-                          </p>
+                      {/* Status: Show "Failed to Submit" if the deadline has passed */}
+                      <td className="p-3 font-semibold">
+                        {isDeadlinePassed ? (
+                          <span className="text-red-600">
+                            ❌ Failed to Submit
+                          </span>
+                        ) : (
+                          "Pending"
                         )}
+                      </td>
 
-                        {/* Submit Button */}
-                        <button
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all text-xs md:text-sm mt-2 mx-auto block"
-                          onClick={() => handleSubmitAssignment(assignment._id)}
+                      <td className="p-3">
+                        <a
+                          href={assignment.assignmentFile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 md:px-4 md:py-1 rounded-md shadow-md transition-all text-xs md:text-sm"
                         >
-                          Submit
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          View
+                        </a>
+                      </td>
+
+                      <td className="p-3">
+                        <div className="flex flex-col items-center justify-center">
+                          {/* File Input (Click Icon to Upload) */}
+                          {!isDeadlinePassed && (
+                            <label className="cursor-pointer text-blue-600 hover:text-blue-800 text-xl flex items-center">
+                              📂
+                              <input
+                                type="file"
+                                accept=".pdf"
+                                className="hidden"
+                                onChange={(e) =>
+                                  handleFileChange(e, assignment._id)
+                                }
+                              />
+                            </label>
+                          )}
+
+                          {/* Display Selected File Name */}
+                          {selectedFiles[assignment._id] &&
+                            !isDeadlinePassed && (
+                              <p
+                                className="text-xs text-gray-600 truncate max-w-[120px] mt-1 text-center"
+                                title={selectedFiles[assignment._id].name}
+                              >
+                                {selectedFiles[assignment._id].name.length > 15
+                                  ? selectedFiles[
+                                      assignment._id
+                                    ].name.substring(0, 12) + "..."
+                                  : selectedFiles[assignment._id].name}
+                              </p>
+                            )}
+
+                          {/* Submit Button: Disabled if deadline has passed */}
+                          <button
+                            className={`bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all text-xs md:text-sm mt-2 mx-auto block flex items-center justify-center ${
+                              submittingAssignment === assignment._id ||
+                              isDeadlinePassed
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleSubmitAssignment(assignment._id)
+                            }
+                            disabled={
+                              submittingAssignment === assignment._id ||
+                              isDeadlinePassed
+                            }
+                          >
+                            {submittingAssignment === assignment._id ? (
+                              <>
+                                <svg
+                                  className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full"
+                                  viewBox="0 0 24 24"
+                                ></svg>
+                                Submitting...
+                              </>
+                            ) : (
+                              "Submit"
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

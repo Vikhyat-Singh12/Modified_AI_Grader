@@ -15,11 +15,11 @@ function Signup() {
   const [studentClass, setStudentClass] = useState("");
   const [studentSubjects, setStudentSubjects] = useState([]);
   const [teacherSubject, setTeacherSubject] = useState("");
-  const [experience, setExperience] = useState(""); 
+  const [experience, setExperience] = useState("");
   const [profilePicture, setprofilePicture] = useState(null);
   const [file, setFile] = useState(null);
-  
-  const {signup} = useAuthStore();
+
+  const { signup, isSigningUp } = useAuthStore();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -29,16 +29,28 @@ function Signup() {
     }
   };
 
-  const subjectsList = ["Mathematics","Science","English","History","Geography","Computer"];
+  const subjectsList = [
+    "Mathematics",
+    "Science",
+    "English",
+    "History",
+    "Geography",
+    "Computer",
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
     if (!termsAccepted) {
       toast.error("You must accept the terms and conditions to proceed.");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
       return;
     }
 
@@ -65,14 +77,14 @@ function Signup() {
     if (file) formData.append("profilePicture", file);
 
     await signup(formData);
-    
+
     setName("");
     setEmail("");
-    setMobile("");    
+    setMobile("");
     setPassword("");
     setConfirmPassword("");
     setRole("student");
-    setStudentClass("");    
+    setStudentClass("");
     setStudentSubjects([]);
     setTeacherSubject("");
     setExperience("");
@@ -289,8 +301,21 @@ function Signup() {
           </div>
 
           {/* Signup Button */}
-          <button className="bg-green-600 text-white w-full px-4 py-2 rounded-md hover:bg-green-700 transition">
-            Sign Up
+          <button
+            className="bg-green-600 text-white w-full px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center justify-center"
+            disabled={isSigningUp} // Disable button during sign-up process
+          >
+            {isSigningUp ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 border-2 border-white border-t-transparent rounded-full"
+                  viewBox="0 0 24 24"
+                ></svg>
+                Signing Up...
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </button>
 
           <p className="text-center mt-4">

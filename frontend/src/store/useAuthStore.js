@@ -4,14 +4,16 @@ import {toast} from 'react-hot-toast'
 
 export const useAuthStore = create((set, get) => ({
   user: null,
+  isSigningUp: false,
 
   signup: async (data) => {
     try {
+      set({ isSigningUp: true });
       const response = await axios.post("/auth/signup", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-    //   set({ user: response.data.user });
+      set({ isSigningUp: false });
       return toast.success(response.data.message);
     } catch (error) {
       return toast.error(error.response?.data?.message || "An error occurred");
