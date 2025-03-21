@@ -6,6 +6,7 @@ import {
   FaEnvelope,
   FaUserGraduate,
 } from "react-icons/fa";
+
 import {
   FaFacebookF,
   FaTwitter,
@@ -36,9 +37,9 @@ function ContactUs() {
       {/* contact  */}
       <div className="container mx-auto px-6 py-4">
         <div className="space-x-10 flex items-center justify-center mb-6 ">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-blue-600">Contact Us</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600">Contact Us</h1>
 
-          <div className=" min-w-44 min-h-44 ">
+          <div className=" min-w-44 min-h-44 max-w-72 max-h-72">
             <lottie-player
               id="firstLottie"
               autoplay
@@ -50,7 +51,7 @@ function ContactUs() {
           </div>
         </div>
 
-        <p className="text-4xl text-gray-700 text-center mb-8">
+        <p className="text-sm sm:text-xl md:text-2xl text-gray-700 text-center mb-8">
           Have questions or feedback? Reach out to us!
         </p>
       </div>

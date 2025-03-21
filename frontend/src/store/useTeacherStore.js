@@ -12,18 +12,18 @@ export const useTeacherStore = create((set, get) => ({
     particularStudent: {},
 
     createAssignment: async (data) => {
+        set({ isCreattingAssignment: true });
         try {
-            set({ isCreattingAssignment: true });
             await axios.post("/teacher-dashboard/create-assignment", data, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
             });           
-            // toast.success("Assignment created successfully");
-            set({ isCreattingAssignment: false });
         } catch (error) {
             toast.error(error.response?.data?.message || "An error occurred");
             console.log("Error in createAssignment", error);
+        }finally{
+            set({ isCreattingAssignment: false });
         }
     },
 

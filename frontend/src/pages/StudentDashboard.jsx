@@ -264,7 +264,7 @@ function StudentDashboard() {
 
                           {/* Submit Button: Disabled if deadline has passed */}
                           <button
-                            className={`bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all text-xs md:text-sm mt-2 mx-auto block flex items-center justify-center ${
+                            className={`bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all text-xs md:text-sm mt-2 mx-auto  flex items-center justify-center ${
                               submittingAssignment === assignment._id ||
                               isDeadlinePassed
                                 ? "opacity-50 cursor-not-allowed"

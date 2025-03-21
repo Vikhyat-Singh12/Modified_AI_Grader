@@ -10,18 +10,19 @@ export const useStudentStore = create((set, get) => ({
     assignedTeacher:[],
 
     submitAssignment: async (data) => {
+      set({ isSubmitting: true });
        try {
-         set({ isSubmitting: true });
          await axios.post("/student-dashboard/submit-assignment", data, {
            headers: {
              "Content-Type": "multipart/form-data",
            },
          });
          toast.success("Assignment submitted successfully and AI Graded Successfully");
+        } catch (error) {
+          toast.error(error.response?.data?.message || "An error in submitting Answer");
+          console.log("Error in submitAssignment", error);
+        }finally{
          set({ isSubmitting: false });
-       } catch (error) {
-         toast.error(error.response?.data?.message || "An error in submitting Answer");
-         console.log("Error in submitAssignment", error);
        }
     },
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAdminStore } from "../store/useAdminStore";
+import download from "../assets/download.png";
+
 
 function Teachers() {
   const { teachers, getTeachers, rejectUser } = useAdminStore();
@@ -94,7 +96,7 @@ function Teachers() {
                 >
                   <td className="p-4 align-middle">
                     <img
-                      src={teacher.profilePicture}
+                      src={teacher.profilePicture || download}
                       alt={teacher.name}
                       className="w-12 h-12 rounded-full mx-auto"
                     />

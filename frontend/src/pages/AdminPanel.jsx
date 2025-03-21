@@ -252,7 +252,16 @@ function AdminPanel() {
           <p className="text-3xl font-bold">{students.length}</p>
         </div>
 
-        <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg">
+        <div className="bg-purple-500 text-white p-1 rounded-lg shadow-lg flex flex-col items-center">
+          <lottie-player
+            className="w-36 h-36"
+            id="firstLottie"
+            autoplay
+            loop
+            mode="normal"
+            src="https://lottie.host/155e4331-970e-4fa2-a677-aa796aea08b8/3HTDtyMRWs.json"
+            background="transparent"
+          ></lottie-player>
           <h3 className="text-xl font-semibold">New Forms Recieved</h3>
           <p className="text-3xl font-bold mt-2">
             {filteredPendingUsers.length}
