@@ -26,9 +26,9 @@ function Login() {
       className="flex items-center justify-center min-h-screen bg-cover bg-center p-6"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex bg-white shadow-lg rounded-lg p-8 w-full max-w-5xl">
+      <div className="flex flex-col sm:flex-row bg-white shadow-lg rounded-lg p-8 w-full max-w-5xl">
         {/* Left Section - Lottie Animation */}
-        <div className="w-1/2 flex items-center justify-center">
+        <div className="w-full sm:w-1/2 flex items-center justify-center">
           <Lottie
             animationData={loginAnimation}
             loop={true}
@@ -37,7 +37,7 @@ function Login() {
         </div>
 
         {/* Right Section - Login Form */}
-        <div className="w-1/2 p-8">
+        <div className="w-full sm:w-1/2 p-8">
           <h2 className="text-3xl font-bold text-center text-black mb-6">
             Login
           </h2>
