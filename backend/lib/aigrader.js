@@ -3,60 +3,60 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_URL = process.env.GEMINI_API_URL;
 
+// Function to send data to Gemini API
 const generateAIGrading = async (studentText, assignmentText, assignment) => {
   const prompt = `
-    Assignment Title: ${assignment.title}
-    Assignment Questions: ${assignmentText}
-    Grading Criteria: ${assignment.gradingCriteria}
-    Keywords to Check: ${assignment.keywords.join(", ")}
-    
-    Student's Answer:
-    ${studentText}
+      Assignment Questions: ${assignmentText}
+      Assignment Title: ${assignment.title}
+      Sample Answer: ${assignment.sampleAnswer}
+      Grading Criteria: ${assignment.gradingCriteria}
+      Keywords to Check: ${assignment.keywords.join(", ")}
 
-    ### Instructions for AI:
-    - Evaluate the student's answer based on the grading criteria.
-    - Provide a score out of ${assignment.totalMarks}.
-    - Give short and long feedback.
+      Student's Answer:
+      ${studentText}
 
-    ### Expected Response Format:
-    - Marks: (Score out of ${assignment.totalMarks})
-    - Short Feedback: (1-2 lines)
-    - Long Feedback: (Detailed analysis)
+      Evaluate based on the above criteria and provide:
+      1. Short Feedback (1-2 lines)
+      2. Detailed Feedback
+      3. Marks (out of ${assignment.totalMarks})
+
+      Generate:
+      1. AI Short Feedback (concise summary).
+      2. AI Long Feedback (detailed analysis with improvements).
+      3. AI Marks (out of total marks).
   `;
 
   try {
-    const response = await axios.post(GEMINI_API_URL, {
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
+    const response = await axios.post(
+      `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
+      {
+        prompt,
+        max_tokens: 2000,
+      }
+    );
 
-    // Extract response text
-    const aiResponse = response.data.candidates[0].content.parts[0].text;
-    const lines = aiResponse.split("\n");
+    const aiResponse = response.data.choices[0].text.trim().split("\n");
 
     return {
-      aiShortFeedback:
-        lines[1]?.replace("Short Feedback:", "").trim() ||
-        "No feedback provided.",
-      aiLongFeedback:
-        lines.slice(2).join("\n").replace("Long Feedback:", "").trim() ||
-        "No detailed feedback provided.",
-      aiMarks: parseInt(lines[0]?.replace("Marks:", "").trim(), 10) || 0,
+      aiShortFeedback: aiResponse[0],
+      aiLongFeedback: aiResponse.slice(1, -1).join("\n"),
+      aiMarks: parseInt(aiResponse[aiResponse.length - 1], 10) || 0,
     };
   } catch (error) {
-    // **Debugging - Log Full Gemini API Error Response**
-    console.error("Gemini API Error:", JSON.stringify(error?.response?.data, null, 2));
-    
+    console.error("Gemini API Error:", error);
     return {
-      aiShortFeedback: "AI evaluation failed.",
-      aiLongFeedback:
-        "AI evaluation failed. Feedback is manually entered through the admin panel.",
+      aiShortFeedback: "AI evaluation failed. ",
+      aiLongFeedback:"AI evaluation failed. Feedback is manually entered through the admin panel.",
       aiMarks: 12,
     };
   }
 };
 
 export default generateAIGrading;
+
+
+
 
 
