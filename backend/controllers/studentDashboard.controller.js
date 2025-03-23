@@ -1,7 +1,8 @@
 import CreateAssignment from "../models/createassignment.model.js";
 import Submission from "../models/submission.model.js";
 import { extractTextFromPDFUrl } from "../lib/extractTextFromPDF.js";
-import generateAIGrading from "../lib/aigrader.js";
+// import generateAIGrading from "../lib/aigrader.js";
+import generateAIGrading from "../lib/text_evaluator.js";
 import imagekit from "../lib/imagekit.js"; // ✅ Fixed Import
 import User from "../models/user.model.js";
 
