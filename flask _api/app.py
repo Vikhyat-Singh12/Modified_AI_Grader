@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
+import os
 
 app = Flask(__name__)
 
-# Load the trained model
-model = joblib.load("C:\\Users\\DELL\\OneDrive\\Desktop\\solution Challeng\\AI grader\\flask _api\\xgboost_model.pkl")
+# Load the trained model using a relative path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(current_dir, "xgboost_model.pkl")
+model = joblib.load(model_path)
+
 
 def transform_data(raw_data):
     word_count = raw_data['Word Count']
