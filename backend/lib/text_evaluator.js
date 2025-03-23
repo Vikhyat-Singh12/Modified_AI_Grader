@@ -66,17 +66,35 @@ const generateAIGrading = async (studentText, assignmentText, assignment) => {
        // Send data to Flask API
        const response = await axios.post(FLASK_API_URL, rawData);
        const score = response.data.score;
+
+       const finalScore = (score / 12) * assignment.totalMarks;
+       const percentage = (finalScore / assignment.totalMarks) * 100;
+
+       let aiShortFeedback = "";
+       if (percentage > 90) {
+           aiShortFeedback = "Outstanding performance! You have demonstrated deep understanding.";
+       } else if (percentage > 80) {
+           aiShortFeedback = "Great job! Your approach is well-structured and clear.";
+       } else if (percentage > 70) {
+           aiShortFeedback = "Good effort! You covered the key aspects well.";
+       } else if (percentage > 60) {
+           aiShortFeedback = "Decent attempt! Some areas could be refined for better clarity.";
+       } else if (percentage > 50) {
+           aiShortFeedback = "Fair work! Try to be more precise and detailed in your response.";
+       } else {
+           aiShortFeedback = "Needs improvement. Focus on covering all important aspects with clarity.";
+       }
+
        return {
-         aiShortFeedback: "Flask API Score",
-         aiLongFeedback: "Full Feedback",
-         aiMarks: parseInt(score) || 0,
+         aiShortFeedback,
+         aiLongFeedback: "Full feedback will be generated based on a detailed analysis.",
+         aiMarks: parseInt(finalScore) || 0,
        };
      } catch (error) {
        console.error("Error communicating with Flask API:", error);
        return {
-         aiShortFeedback: "AI evaluation failed. ",
-         aiLongFeedback:
-           "AI evaluation failed. Feedback is manually entered through the admin panel.",
+         aiShortFeedback: "AI evaluation failed.",
+         aiLongFeedback: "AI evaluation failed. Feedback is manually entered through the admin panel.",
          aiMarks: 0,
        };
      }

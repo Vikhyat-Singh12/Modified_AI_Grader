@@ -5,7 +5,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load the trained model
-model = joblib.load("c:/Users/DELL/OneDrive/Desktop/ai !/AI-Grader/flask _api/xgboost_model.pkl")
+model = joblib.load("C:\\Users\\DELL\\OneDrive\\Desktop\\solution Challeng\\AI grader\\flask _api\\xgboost_model.pkl")
 
 def transform_data(raw_data):
     word_count = raw_data['Word Count']

@@ -6,8 +6,7 @@ from sklearn.metrics import mean_squared_error
 import joblib
 
 # Load your training data
-essay_dataframe = pd.read_csv('C:/Users/DELL/OneDrive/Desktop/ai !/AI-Grader/flask _api/data_train_main.csv')
-
+essay_dataframe = pd.read_csv('C:/Users/DELL/OneDrive/Desktop/solution Challeng/AI grader/flask _api/data_train_main.csv')
 # Split the data into features and target
 X = essay_dataframe.drop(['Score','Essay ID', 'Essay Set'], axis=1)
 Y = essay_dataframe['Score']
