@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "python -m venv venv && . venv/bin/activate && pip install -r requirements.txt && npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend",
-    "start": "cross-env NODE_ENV=production concurrently \"node backend/server.js\" \"venv/bin/python flask _api/app.py\"",
+    "start": "cross-env NODE_ENV=production concurrently \"node backend/server.js\" \"venv/bin/python \\\"flask _api/app.py\\\"\"",
     "dev": "cross-env NODE_ENV=development concurrently \"nodemon backend/server.js\" \"venv\\Scripts\\python \\\"flask _api/app.py\\\"\""
   },
   "keywords": [],
