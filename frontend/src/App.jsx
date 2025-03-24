@@ -8,6 +8,7 @@ import { useAuthStore } from "./store/useAuthStore";
 // Import layout components
 import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
+import ChatBot from "./components/Layout/ChatBot";
 
 // Import pages
 import Home from "./pages/Home";
@@ -174,7 +175,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-
+      
+      <ChatBot />
       <Footer />
       <Toaster />
     </div>

@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.route.js'
 import teacherDashboard from './routes/teacherDashboard.route.js'
 import studentDashboard from './routes/studentDashboard.route.js'
 import adminDashboard from './routes/adminDashboard.route.js'
+import chatbotRoute from './routes/chatbot.route.js'
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/teacher-dashboard',teacherDashboard);
 app.use('/api/student-dashboard',studentDashboard);
 app.use('/api/admin-dashboard',adminDashboard);
+app.use('/api/chatbot',chatbotRoute);
 
 
 if(process.env.NODE_ENV === 'production'){
