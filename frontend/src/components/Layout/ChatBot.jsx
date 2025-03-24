@@ -5,6 +5,7 @@ import { IoSend } from "react-icons/io5";
 import { useAuthStore } from "../../store/useAuthStore";
 import download from "./../../assets/download.png";
 import chatbot_icon from "./../../assets/chatbot_icon.png";
+import chatbot from "./../../assets/chatbot.png";
 import chatbot_typing from "./../../assets/chatbot_typing.png";
 
 const ChatBot = () => {
@@ -97,7 +98,7 @@ const ChatBot = () => {
       <button
         ref={chatButtonRef} // Attach the ref to the button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed bottom-5 right-5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center text-2xl shadow-xl hover:scale-110 transition duration-300 ease-in-out"
+        className="fixed bottom-5 right-5 border border-blue-700 bg-white text-white rounded-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center text-2xl shadow-blue-600 shadow-lg hover:scale-110 transition duration-300 ease-in-out"
       >
         <img
           src={chatbot_icon}
@@ -112,8 +113,13 @@ const ChatBot = () => {
           className="fixed bottom-24 sm:bottom-28 right-5 w-72 sm:w-96 h-[500px] bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-300 z-50"
         >
           {/* Chat Header */}
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 text-center font-bold text-lg flex justify-between items-center rounded-t-2xl">
-            <span>AI Chatbot</span>
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 text-center font-bold text-lg flex  items-center rounded-t-2xl">
+            <img
+              src={chatbot}
+              alt="chatbot_logo"
+              className="w-12 h-12  rounded-lg"
+            />
+            <span>NovaX AI</span>
           </div>
 
           {/* Chat Messages */}
