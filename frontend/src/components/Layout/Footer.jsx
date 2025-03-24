@@ -18,7 +18,7 @@ function Footer() {
           <img
             src={logo}
             alt="logo"
-            className="w-35 md:w-60 lg:w-30 h-auto"
+            className="w-35 md:max-w-48 h-auto"
           />
           <br />
           <p className="text-sm leading-relaxed w-full max-w-[600px] text-[#767478]">
