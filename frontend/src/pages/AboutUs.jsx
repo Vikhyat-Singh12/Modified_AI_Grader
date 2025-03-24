@@ -1,33 +1,34 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Vikhyat from "../assets/pic/Vikhyat.jpg";
-import Prakash from "../assets/pic/Prakash.jpg";
+import Vikhyat from "../assets/pic/Vikhyat1.jpg";
+import Prakash from "../assets/pic/Prakash1.jpg";
 import Riya from "../assets/pic/Riya.jpg";
 import Ananya from "../assets/pic/Ananya.jpg";
 
 function AboutUs() {
-  const teamMembers = [
-    {
-      name: "Vikhyat Singh",
-      role: "Information Technology",
-      image: Vikhyat,
-    },
-    {
-      name: "Prakash Raj",
-      role: "Computer Science & Engineering",
-      image: Prakash,
-    },
-    {
-      name: "Riya Verma",
-      role: "Computer Science & Engineering",
-      image: Riya,
-    },
-    {
-      name: "Ananya Gupta",
-      role: "Information Technology",
-      image: Ananya,
-    },
-  ];
+ const teamMembers = [
+   {
+     name: "Vikhyat Singh",
+     role: "MERN Stack Developer (IT)",
+     image: Vikhyat,
+   },
+   {
+     name: "Prakash Raj",
+     role: "UI/UX Designer (CSE)",
+     image: Prakash,
+   },
+   {
+     name: "Riya Verma",
+     role: "AI/ML Engineer (CSE)",
+     image: Riya,
+   },
+   {
+     name: "Ananya Gupta",
+     role: "UI/UX Designer (IT)",
+     image: Ananya,
+   },
+ ];
+
 
   const teamVariants = {
     hidden: { opacity: 0, y: 50 },

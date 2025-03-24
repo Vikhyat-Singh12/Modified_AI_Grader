@@ -115,8 +115,6 @@ function Home() {
         </div>
       </section>
 
-      <hr className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 border-0 mt-12 shadow-xl" />
-
       {/* Why Choose Us Section */}
       <section
         ref={sectionRef}
