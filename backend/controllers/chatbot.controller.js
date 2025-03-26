@@ -7,24 +7,22 @@ const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/
 
 export const chatbot = async (req, res) => {
   try {
-    const { text } = req.query;
+    const { text, history } = req.query; // Extract user input and history
 
     if (!text) {
-      return res.status(400).json({ message: "Text query is required" });
+      return res.status(400).json({ message: "Text is required" });
     }
+
+    const chatContext = history
+      ? `Previous messages:\n${history}\nUser: ${text}`
+      : text;
 
     const response = await axios.post(
       GEMINI_API_URL,
       {
-        contents: [
-          {
-            parts: [{ text }],
-          },
-        ],
+        contents: [{ role: "user", parts: [{ text: chatContext }] }],
       },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      { headers: { "Content-Type": "application/json" } }
     );
 
     if (response.data?.candidates) {
@@ -36,10 +34,12 @@ export const chatbot = async (req, res) => {
     } else {
       return res
         .status(500)
-        .json({ message: "Error generating response", details: response.data });
+        .json({
+          message: "Error generating response"
+        });
     }
   } catch (error) {
     console.error("Error in chatbot controller", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error"});
   }
 };

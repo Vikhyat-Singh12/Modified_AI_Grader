@@ -69,8 +69,17 @@ const ChatBot = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.get("/api/chatbot", { params: { text } });
-      const botReply = response.data.reply;
+      // Extract the last 10 messages for context
+      const lastMessages = newMessages
+        .slice(-10)
+        .map((msg) => `${msg.sender}: ${msg.text}`)
+        .join("\n");
+
+      const response = await axios.get("/api/chatbot", {
+        params: { text, history: lastMessages }, // Sending history as a query parameter
+      });
+
+      let botReply = response?.data?.reply || "Something went wrong!!! Please try again later...";
 
       const updatedMessages = [
         ...newMessages,
@@ -83,14 +92,31 @@ const ChatBot = () => {
           }),
         },
       ];
+
       setMessages(updatedMessages);
       sessionStorage.setItem("chatHistory", JSON.stringify(updatedMessages));
     } catch (error) {
       console.error("Chatbot error:", error);
+
+      const updatedMessages = [
+        ...newMessages,
+        {
+          sender: "bot",
+          text: "Something went wrong!!! Please try again later...",
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ];
+
+      setMessages(updatedMessages);
+      sessionStorage.setItem("chatHistory", JSON.stringify(updatedMessages));
     } finally {
       setIsTyping(false);
     }
   };
+
 
   return (
     <>
@@ -98,7 +124,7 @@ const ChatBot = () => {
       <button
         ref={chatButtonRef} // Attach the ref to the button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed bottom-5 right-5 border border-blue-700 bg-white text-white rounded-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center text-2xl shadow-blue-600 shadow-lg hover:scale-110 transition duration-300 ease-in-out"
+        className="fixed bottom-5 right-5 border border-blue-700 bg-white text-white rounded-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center text-2xl shadow-blue-600 shadow-lg hover:scale-110 transition duration-300 ease-in-out z-50"
       >
         <img
           src={chatbot_icon}
