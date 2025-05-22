@@ -1,16 +1,19 @@
 // helllo tum yaha pe run nahi kar paogi??   tumhe download karana padega
 
+
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 
-// Import layout components
+// // Import layout components
 import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
 import ChatBot from "./components/Layout/ChatBot";
+import ScrollToTop from "./components/Layout/Scroll";
 
-// Import pages
+
+// // // Import pages
 import Home from "./pages/Home";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -24,15 +27,20 @@ import StudentProfile from "./pages/StudentProfile";
 import Subjects from "./pages/Subjects";
 import SubjectDetails from "./pages/SubjectDetails";
 import CreateAssignment from "./pages/CreateAssignment";
+import CreateTest from "./pages/CreateTestPage";
 import ViewSubmissions from "./pages/ViewSubmission";
 import ViewStudentProfile from "./pages/ViewStudentProfile";
 import ViewFeedback from "./pages/ViewFeedback";
 import StudentsPage from "./pages/StudentsPage";
+import SubmitTest from "./pages/SubmitTest";
 import TeachersPage from "./pages/TeachersPage";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import AdminProfile from "./pages/AdminProfile";
 import NotFound from "./pages/NotFound";
+import TestInstruction from "./pages/TestInstruction";
+import ReviewTestPage from "./pages/ReviewTestPage";
+import ViewTestSubmissions from "./pages/ViewTestSubmissions";
 
 
 
@@ -46,6 +54,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
       <Header />
 
       <div className="flex-1 p-4 ">
@@ -119,10 +128,27 @@ function App() {
             }
           />
           <Route
+            path="/teacher-dashboard/create-test"
+            element={
+              role === "teacher" ? <CreateTest /> : <Navigate to="/login" />
+            }
+          />
+
+          <Route
             path={`/teacher-dashboard/:assignmentId`}
             element={
               role === "teacher" ? (
                 <ViewSubmissions />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path={`/teacher-dashboard/test/:testId`}
+            element={
+              role === "teacher" ? (
+                <ViewTestSubmissions />
               ) : (
                 <Navigate to="/login" />
               )
@@ -149,6 +175,24 @@ function App() {
               )
             }
           />
+
+          <Route
+            path="/student-dashboard/:testId"
+            element={
+              role === "student" ? (
+                <TestInstruction />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+
+          <Route
+            path="/start-test/:testId"
+            element={
+              role === "student" ? <SubmitTest /> : <Navigate to="/login" />
+            }
+          />
           <Route
             path="/subjects"
             element={
@@ -167,6 +211,16 @@ function App() {
               role === "student" ? <ViewFeedback /> : <Navigate to="/login" />
             }
           />
+          <Route
+            path="/subjects/test/:id/:submitTestId"
+            element={
+              role === "student" || role === "teacher" ? (
+                <ReviewTestPage/>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
 
           <Route path="/help-support" element={<HelpSupport />} />
           <Route path="/feedback-analytics" element={<FeedbackAnalytics />} />
@@ -175,7 +229,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-      
+
       <ChatBot />
       <Footer />
       <Toaster />

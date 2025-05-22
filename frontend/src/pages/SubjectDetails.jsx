@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useParams } from "react-router-dom";
 import { useStudentStore } from "../store/useStudentStore";
 import SubjectCard from "./SubjectCard"; 
@@ -10,10 +10,14 @@ import EnglishBg from "../assets/bg/english_bg.jpg";
 
 function SubjectDetails() {
   const { id } = useParams();
-  const { assignments, submittedAssignments, getAllAssgnmentAndSubmittedAssignment } = useStudentStore();
+  const { assignments, submittedAssignments, getAllAssgnmentAndSubmittedAssignment, tests, submittedTests, getAllTestAndSubmittedTest } = useStudentStore();
+
+  const [toggle, setToggle] = useState(false);
+
     
   useEffect(() => {
       getAllAssgnmentAndSubmittedAssignment({ subject: id });
+      getAllTestAndSubmittedTest({ subject: id });
   },[id]);
 
   const subjects = {
@@ -26,14 +30,12 @@ function SubjectDetails() {
   };
 
   const subject = subjects[id];
-
-
+  const submitted = toggle ? submittedTests : submittedAssignments;
 
   return (
     <div className="w-full min-h-screen relative">
       {subject && (
         <div className="absolute inset-0 -z-10 w-full h-full">
-          {/* Background with Doodle Effect */}
           <div
             className="w-full min-h-full"
             style={{
@@ -44,30 +46,63 @@ function SubjectDetails() {
             }}
           ></div>
 
-          {/* Opacity Effect */}
           <div className="absolute inset-0 bg-white opacity-90"></div>
         </div>
       )}
 
-      {/* Subject Header */}
-      {subject  ? (
+      {subject ? (
         <>
-          <h2 className="relative w-full text-2xl sm:text-3xl md:text-4xl font-extrabold text-white bg-gradient-to-r from-[#2155CD] to-[#41C9E2] px-4 py-3 text-center shadow-md rounded-lg">
-            {subject.name}
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-gradient-to-r from-[#2155CD] to-[#41C9E2] px-6 py-5 shadow-md rounded-lg gap-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">
+              {subject.name}
+            </h2>
 
-          {/* Assignment Cards Container */}
+            <div className="relative flex items-center bg-gradient-to-r from-[#0AA1DD] to-[#2155CD] rounded-full p-1 shadow-inner w-[220px] h-10">
+              <div
+                className={`absolute top-1 left-1 h-8 w-[104px] rounded-full bg-white shadow-md transition-transform duration-300 ease-in-out ${
+                  toggle ? "translate-x-[108px]" : "translate-x-0"
+                }`}
+              ></div>
+
+              <button
+                onClick={() => setToggle(false)}
+                className={`z-10 w-1/2 h-full text-sm font-bold transition-colors duration-300 rounded-full ${
+                  !toggle ? "text-[#2155CD]" : "text-white"
+                }`}
+              >
+                Assignments
+              </button>
+
+              <button
+                onClick={() => setToggle(true)}
+                className={`z-10 w-1/2 h-full text-sm font-bold transition-colors duration-300 rounded-full ${
+                  toggle ? "text-[#2155CD]" : "text-white"
+                }`}
+              >
+                Tests
+              </button>
+            </div>
+          </div>
+            
+
           <div className="relative flex flex-wrap justify-center gap-4 mt-6 px-4">
-            {submittedAssignments?.length === 0 && (
+            {submitted?.length === 0 && (
               <p className="text-center text-red-600 font-semibold text-4xl mt-10">
-                No assignments submitted yet.
+                No {toggle? "tests" : "assignments"} submitted yet.
               </p>
             )}
-            {submittedAssignments?.map((submission) => {
-
+            {submitted?.map((submission) => {
               const assignment = assignments.find((a) => a._id === submission.assignmentId);
+              const test = tests.find((t) => t._id === submission.testId);
+
               return (
-                <SubjectCard key={submission._id} submission={submission} assignment={assignment} id={id} />
+                <SubjectCard
+                  key={submission._id}
+                  submission={submission}
+                  assignment={toggle ? test : assignment}
+                  id={id}
+                  toggle={toggle}
+                />
               );
             })}
           </div>

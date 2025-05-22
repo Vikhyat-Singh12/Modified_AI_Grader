@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
 import { useStudentStore } from "../store/useStudentStore";
@@ -12,10 +13,12 @@ function StudentDashboard() {
     assignments,
     submittedAssignments,
     getAllAssgnmentAndSubmittedAssignment,
-    submitAssignment,
+    tests,
+    submittedTests,
+    getAllTestAndSubmittedTest,
     assignedTeacher,
     getAssignedTeacher,
-    isSubmitting,
+    submitAssignment,
   } = useStudentStore();
 
   const subjects = user.subjects;
@@ -24,8 +27,14 @@ function StudentDashboard() {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [submittingAssignment, setSubmittingAssignment] = useState(null);
 
+  const [toggle, setToggle] = useState(false);
+  const [countdowns, setCountdowns] = useState({});
+
+
+  
   useEffect(() => {
     getAllAssgnmentAndSubmittedAssignment({ subject: selectedSubject });
+    getAllTestAndSubmittedTest({ subject: selectedSubject });
     getAssignedTeacher({ subject: selectedSubject });
   }, [selectedSubject]);
 
@@ -35,7 +44,38 @@ function StudentDashboard() {
         (submitted) => submitted.assignmentId === assignment._id
       )
   );
+    
+    
+  const pendingTests = tests.filter(
+    (test) => !submittedTests.some((submitted) => submitted.testId === test._id)
+  );
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const newCountdowns = {};
 
+      pendingTests?.forEach((test) => {
+        const deadline = new Date(test.deadline);
+        const diff = deadline - now;
+
+        if (diff > 0) {
+          const minutes = Math.floor((diff / 1000 / 60) % 60);
+          const hours = Math.floor(diff / 1000 / 60 / 60);
+          const seconds = Math.floor((diff / 1000) % 60);
+          newCountdowns[test._id] = `${hours}h ${minutes}m ${seconds}s`;
+        } else {
+          newCountdowns[test._id] = "❌ Failed";
+        }
+      });
+
+      setCountdowns(newCountdowns);
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval); // Clean up when unmounted
+  }, [pendingTests]);
+
+  
   const handleFileChange = (e, assignmentId) => {
     setSelectedFiles((prev) => ({
       ...prev,
@@ -84,10 +124,38 @@ function StudentDashboard() {
 
       <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 md:p-8">
         {/* Dashboard Title */}
-        <div className="w-full border-b-4 border-[#0E7490] shadow-sm pb-3 mb-5">
+        <div className="w-full border-b-4 border-[#0E7490] shadow-sm pb-3 mb-5 flex flex-col sm:flex-row items-center justify-between">
           <h2 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-[#0AA1DD] to-[#2155CD] text-transparent bg-clip-text">
             Dashboard
           </h2>
+
+          <div className="relative flex bg-gradient-to-r from-[#0AA1DD] to-[#2155CD] rounded-full p-1 shadow-inner w-[220px] h-10">
+            {/* Sliding Background */}
+            <div
+              className={`absolute top-1 left-1 h-8 w-[104px] rounded-full bg-white shadow-md transition-all duration-300 ${
+                toggle ? "translate-x-[108px]" : "translate-x-0"
+              }`}
+            ></div>
+
+            {/* Button Labels */}
+            <button
+              onClick={() => setToggle(false)}
+              className={`z-10 w-1/2 text-sm font-bold transition-colors duration-300 rounded-full ${
+                !toggle ? "text-[#2155CD]" : "text-white"
+              }`}
+            >
+              Assignments
+            </button>
+
+            <button
+              onClick={() => setToggle(true)}
+              className={`z-10 w-1/2 text-sm font-bold transition-colors duration-300 rounded-full ${
+                toggle ? "text-[#2155CD]" : "text-white"
+              }`}
+            >
+              Tests
+            </button>
+          </div>
         </div>
 
         {/* Student Profile & Subject Selector */}
@@ -169,10 +237,10 @@ function StudentDashboard() {
 
         {/* Assignments Section */}
         <h3 className="text-2xl md:text-3xl font-extrabold my-6 text-[#F7EEDD] tracking-wide text-center bg-[#2155CD] px-4 py-2 rounded-lg shadow-md">
-          Assignments
+            {!toggle ? "Assignments" : "Tests"}
         </h3>
 
-        {pendingAssignments.length > 0 ? (
+        {!toggle && pendingAssignments.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="border-collapse rounded-lg shadow-lg overflow-hidden w-full text-sm md:text-base">
               <thead>
@@ -298,10 +366,87 @@ function StudentDashboard() {
               </tbody>
             </table>
           </div>
+        ) : toggle && pendingTests.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="border-collapse rounded-lg shadow-lg overflow-hidden w-full text-sm md:text-base">
+              <thead>
+                <tr className="bg-gradient-to-r from-[#0AA1DD] to-[#2155CD] text-white">
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Due Date</th>
+                  <th className="p-3">Total Marks</th>
+                  <th className="p-3">Time Duration</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingTests?.map((test, index) => {
+                  const dueDate = new Date(test.deadline);
+
+                  return (
+                    <tr
+                      key={test._id}
+                      className={`text-center text-xs md:text-sm ${
+                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                      } hover:bg-gray-200 transition-all`}
+                    >
+                      <td className="p-3">{test.title}</td>
+                      <td className="p-3">
+                        {dueDate.toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "2-digit",
+                        })}
+                      </td>
+                      <td className="p-3">{test.totalMarks}</td>
+
+                      <td className="p-3">{test.testDuration} minutes</td>
+
+                      <td className="p-3 font-semibold">
+                        {countdowns[test._id] ? (
+                          <span className={countdowns[test._id] === "❌ Failed" ? "text-red-600" : "text-yellow-600"}>
+                            {countdowns[test._id]}
+                          </span>
+                        ) : (
+                          "⌛"
+                        )}
+                      </td>
+
+                      <td className="p-3">
+                        {new Date(test.deadline) > new Date() ? (
+                          <Link
+                            to={`/student-dashboard/${test._id}`}
+                            className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded-2xl shadow-md hover:bg-blue-700 hover:scale-105 transition-all duration-300 ease-in-out active:scale-95"
+                          >
+                            <span>📝 Start Test</span>
+                            <svg
+                              className="w-5 h-5 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                              />
+                            </svg>
+                          </Link>
+                        ) : (
+                          <span className="text-red-600 font-semibold">❌ Deadline Passed</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <div className="mt-6 bg-green-100 p-3 rounded-lg shadow-md text-center">
             <p className="text-green-900 font-semibold">
-              ✅ No pending assignments.
+              ✅ No pending {toggle ? "Tests" : "Assignments"}.
             </p>
           </div>
         )}

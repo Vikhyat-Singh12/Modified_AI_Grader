@@ -3,11 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import {
   CheckCircle,
   XCircle,
-  User,
-  Mail,
-  GraduationCap,
-  Phone,
-  BookOpen,
 } from "lucide-react";
 
 import download from "../assets/download.png";

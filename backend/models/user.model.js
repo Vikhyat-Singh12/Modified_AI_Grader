@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     profilePicture: {
-      type: String, // Should be a URL string, not a direct import
-      default: "", // Replace with your default image URL
+      type: String,
+      default: "", 
     },
     address: {
       type: String,
@@ -48,36 +48,33 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    // Student-Specific Fields
     studentClass: {
-      type: Number, // For students (1-12)
+      type: Number, 
       min: 1,
       max: 12,
-      default: null, // Null for teachers & admins
+      default: null, 
     },
     subjects: {
-      type: [String], // For students (list of enrolled subjects)
-      default: [], // Undefined for teachers & admins
+      type: [String], 
+      default: [], 
     },
 
-    // Teacher-Specific Fields
     assignedClasses: {
-      type: [Number], // For teachers (list of assigned classes)
-      default: [], // Undefined for students & admins
+      type: [Number],
+      default: [], 
     },
     specializedSubject: {
-      type: String, // For teachers (single specialized subject)
+      type: String,
       default: undefined,
     },
     experience: {
-      type: Number, // For teachers (years of experience)
+      type: Number, 
       default: 0,
     },
 
-    // Admin Approval
     isApproved: {
       type: Boolean,
-      default: false, // Admin approval status
+      default: false, 
     },
 
     dateOfRegistration: {
