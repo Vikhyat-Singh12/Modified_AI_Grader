@@ -57,6 +57,7 @@ export const signup = async (req, res) => {
       mobile,
       password: hashedPassword,
       role,
+      isApproved: role === "student" ? true : false, // Automatically approve students
       profilePicture: profileImageUrl, // Ensure this is stored
       ...(role === "student"
         ? { studentClass, subjects }
@@ -69,10 +70,17 @@ export const signup = async (req, res) => {
       "-password"
     );
 
+    if(newUser.role === "teacher"){
     res.status(201).json({
-      message: "Form submitted successfully! Now, Verification is in progress",
+      message: "Form submitted successfully! and your form is under review",
       user: userWithoutPassword,
-    });
+    });}
+    else{
+      res.status(201).json({
+        message: "Form submitted successfully! and U can login now",
+        user: userWithoutPassword,
+      });
+    }
   } catch (error) {
     console.error("Error in signup:", error);
     res.status(500).json({ message: "Server error", error: error.message });

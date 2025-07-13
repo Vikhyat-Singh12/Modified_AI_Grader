@@ -9,7 +9,8 @@ import chatbot from "./../../assets/chatbot.png";
 import chatbot_typing from "./../../assets/chatbot_typing.png";
 
 const ChatBot = () => {
-  const { user } = useAuthStore();
+  // const { user } = useAuthStore();
+  const user = true;
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
